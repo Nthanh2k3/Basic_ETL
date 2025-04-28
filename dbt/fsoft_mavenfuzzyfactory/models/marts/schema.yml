@@ -1,0 +1,87 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "Customer dimension containing unique users and their first activity date."
+    columns:
+      - name: user_id
+        description: "Primary key for customer."
+        tests:
+          - not_null
+          - unique
+      - name: created_at
+        description: "Timestamp when the customer first appeared."
+
+  - name: dim_products
+    description: "Product dimension containing available products."
+    columns:
+      - name: product_id
+        description: "Primary key for product."
+        tests:
+          - not_null
+          - unique
+      - name: product_name
+        description: "Name of the product."
+      - name: created_at
+        description: "Product created date."
+
+  - name: dim_channels
+    description: "Marketing channels dimension derived from website sessions."
+    columns:
+      - name: channel_id
+        description: "Session id representing the channel."
+        tests:
+          - not_null
+          - unique
+      - name: utm_source
+        description: "Marketing source."
+      - name: utm_campaign
+        description: "Marketing campaign."
+      - name: utm_content
+        description: "Marketing content."
+
+  - name: dim_date
+    description: "Date dimension containing calendar information."
+    columns:
+      - name: date_id
+        description: "The date itself (YYYY-MM-DD)."
+        tests:
+          - not_null
+          - unique
+      - name: year
+        description: "Year extracted from date."
+      - name: month
+        description: "Month extracted from date."
+      - name: day
+        description: "Day extracted from date."
+      - name: quarter
+        description: "Quarter extracted from date."
+      - name: day_of_week
+        description: "Day of the week extracted from date."
+
+  - name: fact_orders
+    description: "Fact table containing order transactions including refund status."
+    columns:
+      - name: order_id
+        description: "Primary key for each order."
+        tests:
+          - not_null
+          - unique
+      - name: user_id
+        description: "Reference to dim_customers."
+      - name: product_id
+        description: "Reference to dim_products."
+      - name: date_id
+        description: "Reference to dim_date."
+      - name: channel_id
+        description: "Reference to dim_channels."
+      - name: price_usd
+        description: "Revenue of the order."
+      - name: cogs_usd
+        description: "Cost of goods sold for the order."
+      - name: profit_usd
+        description: "Profit made (price - cogs)."
+      - name: has_refund
+        description: "Whether the order has a refund."
+      - name: refund_amount_usd
+        description: "Total refunded amount."
